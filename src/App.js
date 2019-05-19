@@ -2,50 +2,71 @@ import React from 'react';
 import './App.css';
 import { connect } from 'react-redux';
 import * as actions from './actions/loadingActions';
+import Loader from './components/Loader';
 
-const Loader = () => (<h1>MUAHGAHAHA</h1>)
+function App({
+	isLoading,
+	message,
+	list,
+	active,
+	getBeerList,
+	getRandomBeer,
+	setActiveBeer
+}) {
+	const renderBeerList = () => (
+		<ul className='beerList'>
+			{list.map((beer, i) => (
+				<li key={i} onClick={() => setActiveBeer(beer)}>
+					{beer.name}
+				</li>
+			))}
+		</ul>
+	);
 
-function App({ isLoading, message, list, active }) {
+	const getBeerButton = () => (
+		<div className='button' onClick={getBeerList}>
+			GET BEERZZZ!!!
+		</div>
+	);
 
-  const renderBeerList = () => (
-    <ul>
-      {list.map((beer, i) => (
-        <li key={i} onClick={() => actions.setActiveBeer(beer)}>
-          {beer.name}
-        </li>
-      ))}
-    </ul>
-  );
+	const getRandomBeerButton = () => (
+		<div className='button' onClick={getRandomBeer}>YA PUSSY? LET ME CHOOSE FOR YOU</div>
+	);
 
-  const getBeerButton = () => (<div onClick={actions.getBeerList}>GET BEERZZZ!!!</div>);
+	const renderActiveBeer = () => (
+		<>
+			<div className='description'>
+				<h1>{active.name}</h1>
+				<span>{active.tagline}</span>
+				<p>{active.description}</p>
+			</div>
+			<img
+				className='image'
+				src={active.image_url}
+				alt='das ist ein bier obrazek'
+			/>
+		</>
+	);
 
-  const getRandomBeerButton = () => (<div onClick={actions.getRandomBeer}>YA PUSSY? LET ME CHOOSE FOR YOU</div>);
-
-  const renderActiveBeer = () => (<div>
-    <h1>{active.name}</h1>
-    <span>{active.tagline}</span>
-    <p>{active.description}</p>
-    <img src={active.image_url} alt='das ist ein bier obrazek'/>
-  </div>)
-  return (
-    <>
-      <div>
-        <div className='left'>
-          {list ? renderBeerList() : getBeerButton()}
-        </div>
-        <div className='right'>
-          <div className="getRandom">{getRandomBeerButton()}</div>
-          <div className="details">
-            {active ? renderActiveBeer() : null}
-          </div>
-        </div>
-      </div>
-      {isLoading && <Loader />}
-    </>
-  );
+	return (
+		<>
+			<div className='container'>
+				<div className='left'>
+					{list ? renderBeerList() : getBeerButton()}
+				</div>
+				<div className='right'>
+					<div className='getRandom'>{getRandomBeerButton()}</div>
+					<div className='details'>
+						{active ? renderActiveBeer() : null}
+					</div>
+				</div>
+			</div>
+			{!isLoading ? null : <Loader />}
+		</>
+	);
 }
 
 export default connect(
-  ({ loader, beers}) => ({ ...loader, ...beers }),
-  actions
+	({ loader, beers }) => ({ ...loader, ...beers }),
+	actions
 )(App);

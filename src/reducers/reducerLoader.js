@@ -12,20 +12,20 @@ export default (state = initialState, { type, payload }) => {
     case LOADING:
       return {
         ...state,
-        isLoading: state.isLoading++
+        isLoading: state.isLoading + 1
       };
 
     case SUCCESS:
       return {
         ...state,
-        isLoading: state.isLoading--
+        isLoading: state.isLoading - 1
       };
 
     case FAIL:
       return {
         ...state,
         message: payload.message,
-        isLoading: state.isLoading--
+        isLoading: state.isLoading - 1
       };
 
     default:
